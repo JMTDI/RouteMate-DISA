@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-merged_res-31:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-main-33:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-merged_res-31:/layout_activity_dialer.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-main-33:/layout/activity_dialer.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-merged_res-31:/drawable_overlay_background.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-main-33:/drawable/overlay_background.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-merged_res-31:/drawable_focused_button_bg.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-main-33:/drawable/focused_button_bg.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-merged_res-31:/layout_activity_main.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-main-33:/layout/activity_main.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-merged_res-31:/xml_accessibility_service_config.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-main-33:/xml/accessibility_service_config.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-merged_res-31:/drawable_dialog_background.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-main-33:/drawable/dialog_background.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-merged_res-31:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-main-33:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-merged_res-31:/layout_overlay_popup.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-main-33:/layout/overlay_popup.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-merged_res-31:/drawable_ic_launcher_background.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-main-33:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-merged_res-31:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "/home/codespace/.gradle/daemon/8.12/com.routemate.app-main-33:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.routemate.app-merged_res-31:/xml_accessibility_service_config.xml.flat",
+        "source": "com.routemate.app-main-33:/xml/accessibility_service_config.xml"
+    }
+]

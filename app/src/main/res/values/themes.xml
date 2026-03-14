@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ── Base app theme ─────────────────────────────────────────────────── -->
+    <style name="Theme.RouteMate" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/accent_green</item>
+        <item name="colorPrimaryDark">@color/bg_dark</item>
+        <item name="colorAccent">@color/accent_green</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/hint_color</item>
+        <!-- Spinner dropdown arrow tint -->
+        <item name="colorControlNormal">@color/accent_green</item>
+        <item name="colorControlActivated">@color/accent_green</item>
+    </style>
+
+</resources>

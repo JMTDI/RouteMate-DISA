@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Floating overlay popup inflated by OverlayManager.
+    Minimum width 260dp so it fits on a 320px screen with margins.
+    All buttons are D-pad focusable with explicit up/down chains.
+-->
+<com.routemate.app.PopupRootLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="260dp"
+    android:orientation="vertical"
+    android:background="@drawable/overlay_background"
+    android:padding="20dp">
+
+    <!-- ── App branding ──────────────────────────────────────────────────── -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textColor="@color/accent_green"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="10dp" />
+
+    <!-- ── "Call [number]" title ─────────────────────────────────────────── -->
+    <TextView
+        android:id="@+id/tv_overlay_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="4dp" />
+
+    <!-- ── Subtitle ──────────────────────────────────────────────────────── -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/overlay_subtitle"
+        android:textColor="@color/hint_color"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
+
+    <!-- ── "Via RouteMate" button (default focus) ────────────────────────── -->
+    <Button
+        android:id="@+id/btn_overlay_via_routemate"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/btn_via_routemate"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@drawable/focused_button_bg"
+        android:focusable="true"
+        android:nextFocusDown="@+id/btn_overlay_direct"
+        android:layout_marginBottom="8dp" />
+
+    <!-- ── "Direct Call" button ──────────────────────────────────────────── -->
+    <Button
+        android:id="@+id/btn_overlay_direct"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/btn_direct_call"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:background="@drawable/focused_button_bg"
+        android:focusable="true"
+        android:nextFocusUp="@id/btn_overlay_via_routemate"
+        android:nextFocusDown="@+id/btn_overlay_cancel"
+        android:layout_marginBottom="8dp" />
+
+    <!-- ── "Cancel" button ───────────────────────────────────────────────── -->
+    <Button
+        android:id="@+id/btn_overlay_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/btn_cancel"
+        android:textSize="16sp"
+        android:textColor="@color/hint_color"
+        android:background="@drawable/focused_button_bg"
+        android:focusable="true"
+        android:nextFocusUp="@id/btn_overlay_direct" />
+
+</com.routemate.app.PopupRootLayout>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App identity -->
+    <string name="app_name">RouteMate</string>
+    <string name="app_subtitle">DISA Dialer</string>
+
+    <!-- Settings labels -->
+    <string name="label_disa_number">DISA Number</string>
+    <string name="label_pin">PIN (masked)</string>
+    <string name="label_initial_pause">Initial pause before PIN</string>
+    <string name="label_dest_pause">Pause between PIN and destination</string>
+
+    <!-- Hints -->
+    <string name="hint_disa_number">e.g. 18005551234</string>
+    <string name="hint_pin">Your DISA PIN</string>
+    <string name="hint_test_number">e.g. 15559876543</string>
+
+    <!-- Buttons -->
+    <string name="btn_accessibility">Enable Accessibility Service</string>
+    <string name="btn_overlay">Allow Draw Over Apps</string>
+    <string name="btn_save">Save Settings</string>
+    <string name="btn_test">Test DISA Call</string>
+
+    <!-- Status panel -->
+    <string name="status_title">STATUS</string>
+    <string name="status_accessibility_label">Accessibility:</string>
+    <string name="status_overlay_label">Draw Over Apps:</string>
+    <string name="status_disa_label">DISA Number:</string>
+    <string name="status_enabled">✓ Enabled</string>
+    <string name="status_not_enabled">✗ Not Enabled</string>
+    <string name="status_allowed">✓ Allowed</string>
+    <string name="status_not_allowed">✗ Not Allowed</string>
+    <string name="status_configured">✓ Configured</string>
+    <string name="status_not_set">✗ Not Set</string>
+
+    <!-- Overlay popup -->
+    <string name="overlay_title">Call %1$s</string>
+    <string name="overlay_subtitle">Route this call?</string>
+    <string name="btn_via_routemate">Via RouteMate</string>
+    <string name="btn_direct_call">Direct Call</string>
+    <string name="btn_cancel">Cancel</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_test_title">Test DISA Call</string>
+    <string name="dialog_test_message">Enter a number to test with DISA routing:</string>
+    <string name="dialog_call">Call</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_perm_title">Permission Required</string>
+    <string name="dialog_perm_message">The CALL_PHONE permission is required for RouteMate to place calls.
+Please grant it when prompted or enable it in System Settings → Apps → RouteMate → Permissions.</string>
+
+    <!-- Toasts -->
+    <string name="toast_saved">Settings saved!</string>
+    <string name="toast_enter_number">Please enter a phone number.</string>
+    <string name="toast_no_permission">Call permission not granted.</string>
+    <string name="toast_call_failed">Unable to place call: %1$s</string>
+
+    <!-- Accessibility service user-facing description (shown in Settings) -->
+    <string name="accessibility_service_description">RouteMate watches for the phone dialer to appear on screen and offers to route calls through your DISA PBX number.</string>
+</resources>

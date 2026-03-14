@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand colours -->
+    <color name="bg_dark">#0d1b2a</color>
+    <color name="accent_green">#00c853</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- UI helpers -->
+    <color name="hint_color">#7a8a9a</color>
+    <color name="button_bg">#1a2a3a</color>
+    <color name="button_focused_bg">#0a2818</color>
+    <color name="button_pressed_bg">#00a040</color>
+    <color name="focused_border">#00c853</color>
+    <color name="normal_border">#2a3a4a</color>
+    <color name="status_error">#ff5252</color>
+
+    <!-- Dialog overlay -->
+    <color name="dialog_bg">#f0111c2e</color>
+</resources>

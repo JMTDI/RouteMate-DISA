@@ -1,0 +1,185 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.routemate.app"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.CALL_PHONE" />
+11-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:4:5-69
+11-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:4:22-66
+12    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+12-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:5:5-75
+12-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:5:22-72
+13    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+13-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:6:5-78
+13-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:6:22-75
+14    <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
+14-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:7:5-77
+14-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:7:22-74
+15    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+15-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:8:5-81
+15-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:8:22-78
+16
+17    <permission
+17-->[androidx.core:core:1.12.0] /home/codespace/.gradle/caches/8.12/transforms/2fa78339c84116922e7391f8ce4035c5/transformed/core-1.12.0/AndroidManifest.xml:22:5-24:47
+18        android:name="com.routemate.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+18-->[androidx.core:core:1.12.0] /home/codespace/.gradle/caches/8.12/transforms/2fa78339c84116922e7391f8ce4035c5/transformed/core-1.12.0/AndroidManifest.xml:23:9-81
+19        android:protectionLevel="signature" />
+19-->[androidx.core:core:1.12.0] /home/codespace/.gradle/caches/8.12/transforms/2fa78339c84116922e7391f8ce4035c5/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
+20
+21    <uses-permission android:name="com.routemate.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+21-->[androidx.core:core:1.12.0] /home/codespace/.gradle/caches/8.12/transforms/2fa78339c84116922e7391f8ce4035c5/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
+21-->[androidx.core:core:1.12.0] /home/codespace/.gradle/caches/8.12/transforms/2fa78339c84116922e7391f8ce4035c5/transformed/core-1.12.0/AndroidManifest.xml:26:22-94
+22
+23    <application
+23-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:10:5-51:19
+24        android:allowBackup="true"
+24-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:11:9-35
+25        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+25-->[androidx.core:core:1.12.0] /home/codespace/.gradle/caches/8.12/transforms/2fa78339c84116922e7391f8ce4035c5/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
+26        android:debuggable="true"
+27        android:extractNativeLibs="false"
+28        android:icon="@mipmap/ic_launcher"
+28-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:12:9-43
+29        android:label="@string/app_name"
+29-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:13:9-41
+30        android:roundIcon="@mipmap/ic_launcher_round"
+30-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:14:9-54
+31        android:supportsRtl="true"
+31-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:15:9-35
+32        android:theme="@style/Theme.RouteMate" >
+32-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:16:9-47
+33
+34        <!-- Main settings screen -->
+35        <activity
+35-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:19:9-27:20
+36            android:name="com.routemate.app.MainActivity"
+36-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:20:13-41
+37            android:exported="true"
+37-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:21:13-36
+38            android:label="@string/app_name" >
+38-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:22:13-45
+39            <intent-filter>
+39-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:23:13-26:29
+40                <action android:name="android.intent.action.MAIN" />
+40-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:24:17-69
+40-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:24:25-66
+41
+42                <category android:name="android.intent.category.LAUNCHER" />
+42-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:25:17-77
+42-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:25:27-74
+43            </intent-filter>
+44        </activity>
+45
+46        <!-- Accessibility service — watches for dialer foreground events -->
+47        <service
+47-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:30:9-40:19
+48            android:name="com.routemate.app.RouteMateAccessibilityService"
+48-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:31:13-58
+49            android:exported="true"
+49-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:32:13-36
+50            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+50-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:33:13-79
+51            <intent-filter>
+51-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:34:13-36:29
+52                <action android:name="android.accessibilityservice.AccessibilityService" />
+52-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:35:17-92
+52-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:35:25-89
+53            </intent-filter>
+54
+55            <meta-data
+55-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:37:13-39:72
+56                android:name="android.accessibilityservice"
+56-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:38:17-60
+57                android:resource="@xml/accessibility_service_config" />
+57-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:39:17-69
+58        </service>
+59
+60        <!-- Intercepts NEW_OUTGOING_CALL before the call is placed -->
+61        <receiver
+61-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:43:9-49:20
+62            android:name="com.routemate.app.OutgoingCallReceiver"
+62-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:44:13-49
+63            android:exported="true" >
+63-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:45:13-36
+64            <intent-filter android:priority="999" >
+64-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:46:13-48:29
+64-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:46:28-50
+65                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+65-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:47:17-82
+65-->/workspaces/RouteMate/app/src/main/AndroidManifest.xml:47:25-79
+66            </intent-filter>
+67        </receiver>
+68
+69        <provider
+69-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/8.12/transforms/06872878108c925354fa48578b1972cb/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+70            android:name="androidx.startup.InitializationProvider"
+70-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/8.12/transforms/06872878108c925354fa48578b1972cb/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
+71            android:authorities="com.routemate.app.androidx-startup"
+71-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/8.12/transforms/06872878108c925354fa48578b1972cb/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
+72            android:exported="false" >
+72-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/8.12/transforms/06872878108c925354fa48578b1972cb/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
+73            <meta-data
+73-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/8.12/transforms/06872878108c925354fa48578b1972cb/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+74                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+74-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/8.12/transforms/06872878108c925354fa48578b1972cb/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
+75                android:value="androidx.startup" />
+75-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/8.12/transforms/06872878108c925354fa48578b1972cb/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
+76            <meta-data
+76-->[androidx.lifecycle:lifecycle-process:2.6.1] /home/codespace/.gradle/caches/8.12/transforms/8d9f9b451a70c8123a33bd212db82312/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:29:13-31:52
+77                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+77-->[androidx.lifecycle:lifecycle-process:2.6.1] /home/codespace/.gradle/caches/8.12/transforms/8d9f9b451a70c8123a33bd212db82312/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:30:17-78
+78                android:value="androidx.startup" />
+78-->[androidx.lifecycle:lifecycle-process:2.6.1] /home/codespace/.gradle/caches/8.12/transforms/8d9f9b451a70c8123a33bd212db82312/transformed/lifecycle-process-2.6.1/AndroidManifest.xml:31:17-49
+79            <meta-data
+79-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:29:13-31:52
+80                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+80-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:30:17-85
+81                android:value="androidx.startup" />
+81-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:31:17-49
+82        </provider>
+83
+84        <receiver
+84-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:34:9-52:20
+85            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+85-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:35:13-76
+86            android:directBootAware="false"
+86-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:36:13-44
+87            android:enabled="true"
+87-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:37:13-35
+88            android:exported="true"
+88-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:38:13-36
+89            android:permission="android.permission.DUMP" >
+89-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:39:13-57
+90            <intent-filter>
+90-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:40:13-42:29
+91                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+91-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:17-91
+91-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:25-88
+92            </intent-filter>
+93            <intent-filter>
+93-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:43:13-45:29
+94                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+94-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:17-85
+94-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:25-82
+95            </intent-filter>
+96            <intent-filter>
+96-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:46:13-48:29
+97                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+97-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:17-88
+97-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:25-85
+98            </intent-filter>
+99            <intent-filter>
+99-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:49:13-51:29
+100                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+100-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:17-95
+100-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/codespace/.gradle/caches/8.12/transforms/d1e1f4a09a8a306ddb82c91f1b2d037a/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:25-92
+101            </intent-filter>
+102        </receiver>
+103    </application>
+104
+105</manifest>
