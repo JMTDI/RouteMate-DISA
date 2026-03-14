@@ -1,4 +1,4 @@
-# RouteMate
+# RouteMate ![GitHub Downloads (latest release)](https://img.shields.io/github/downloads/JMTDI/RouteMate/latest/total)
 
 An Android app for routing outgoing calls through a DISA (Direct Inward System Access) PBX number. When you dial any number, RouteMate intercepts the call *before* it connects and gives you a choice: route it through your corporate PBX (automatically entering your PIN and destination number), place it directly, or cancel.
 
