@@ -43,7 +43,16 @@
             </intent-filter>
         </activity>
 
-        <!-- Accessibility service — watches for dialer foreground events -->
+        <!-- Intercept-and-choose popup — launched before the call is placed -->
+        <activity
+            android:name="com.routemate.app.PopupActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:showOnLockScreen="true"
+            android:theme="@style/Theme.RouteMate.Popup" />
+
+        <!-- Accessibility service — retained for settings status check -->
         <service
             android:name="com.routemate.app.RouteMateAccessibilityService"
             android:exported="true"

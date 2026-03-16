@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:2:1-53:12
-INJECTED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:2:1-53:12
-INJECTED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:2:1-53:12
-INJECTED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:2:1-53:12
+ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:2:1-62:12
+INJECTED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:2:1-62:12
+INJECTED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:2:1-62:12
+INJECTED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:2:1-62:12
 MERGED from [com.google.android.material:material:1.11.0] /home/codespace/.gradle/caches/8.12/transforms/84da12e67a158ed23554f84a8df309df/transformed/material-1.11.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /home/codespace/.gradle/caches/8.12/transforms/82e394c0a3dd3ff8aeba09e75a736ed7/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/codespace/.gradle/caches/8.12/transforms/04b14b3374799ceeefb8111321786b6e/transformed/constraintlayout-2.0.1/AndroidManifest.xml:2:1-11:12
@@ -74,8 +74,8 @@ ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:8:5-81
 	android:name
 		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:8:22-78
 application
-ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:10:5-51:19
-INJECTED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:10:5-51:19
+ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:10:5-60:19
+INJECTED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:10:5-60:19
 MERGED from [com.google.android.material:material:1.11.0] /home/codespace/.gradle/caches/8.12/transforms/84da12e67a158ed23554f84a8df309df/transformed/material-1.11.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.11.0] /home/codespace/.gradle/caches/8.12/transforms/84da12e67a158ed23554f84a8df309df/transformed/material-1.11.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/codespace/.gradle/caches/8.12/transforms/04b14b3374799ceeefb8111321786b6e/transformed/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
@@ -126,40 +126,54 @@ category#android.intent.category.LAUNCHER
 ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:25:17-77
 	android:name
 		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:25:27-74
+activity#com.routemate.app.PopupActivity
+ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:30:9-36:49
+	android:excludeFromRecents
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:36:13-46
+	android:launchMode
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:35:13-43
+	android:exported
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:32:13-37
+	android:showOnLockScreen
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:34:13-44
+	android:theme
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:33:13-57
+	android:name
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:31:13-42
 service#com.routemate.app.RouteMateAccessibilityService
-ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:30:9-40:19
+ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:39:9-49:19
 	android:exported
-		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:32:13-36
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:41:13-36
 	android:permission
-		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:33:13-79
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:42:13-79
 	android:name
-		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:31:13-58
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:40:13-58
 intent-filter#action:name:android.accessibilityservice.AccessibilityService
-ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:34:13-36:29
+ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:43:13-45:29
 action#android.accessibilityservice.AccessibilityService
-ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:35:17-92
+ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:44:17-92
 	android:name
-		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:35:25-89
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:44:25-89
 meta-data#android.accessibilityservice
-ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:37:13-39:72
+ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:46:13-48:72
 	android:resource
-		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:39:17-69
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:48:17-69
 	android:name
-		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:38:17-60
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:47:17-60
 receiver#com.routemate.app.OutgoingCallReceiver
-ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:43:9-49:20
+ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:52:9-58:20
 	android:exported
-		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:45:13-36
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:54:13-36
 	android:name
-		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:44:13-49
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:53:13-49
 intent-filter#action:name:android.intent.action.NEW_OUTGOING_CALL
-ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:46:13-48:29
+ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:55:13-57:29
 	android:priority
-		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:46:28-50
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:55:28-50
 action#android.intent.action.NEW_OUTGOING_CALL
-ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:47:17-82
+ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:56:17-82
 	android:name
-		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:47:25-79
+		ADDED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml:56:25-79
 uses-sdk
 INJECTED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /workspaces/RouteMate/app/src/main/AndroidManifest.xml

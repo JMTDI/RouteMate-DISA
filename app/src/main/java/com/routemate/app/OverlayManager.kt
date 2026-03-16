@@ -1,7 +1,10 @@
 package com.routemate.app
 
 import android.Manifest
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.PixelFormat
 import android.net.Uri
@@ -43,6 +46,7 @@ class OverlayManager(private val context: Context) {
 
     private var overlayView: PopupRootLayout? = null
     private var cancelButton: Button? = null
+    private var screenOffReceiver: BroadcastReceiver? = null
     private val windowManager: WindowManager =
         context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private val handler = Handler(Looper.getMainLooper())
@@ -90,6 +94,15 @@ class OverlayManager(private val context: Context) {
         isShowing = true
         activeInstance = this
 
+        // Fallback: if the screen turns off (power button held), dismiss the popup.
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(ctx: Context, intent: Intent) {
+                if (intent.action == Intent.ACTION_SCREEN_OFF) clickCancel()
+            }
+        }
+        context.registerReceiver(receiver, IntentFilter(Intent.ACTION_SCREEN_OFF))
+        screenOffReceiver = receiver
+
         // Switch to focusable so D-pad works inside the popup
         handler.post {
             if (isShowing) {
@@ -102,6 +115,10 @@ class OverlayManager(private val context: Context) {
     }
 
     fun dismiss() {
+        screenOffReceiver?.let {
+            try { context.unregisterReceiver(it) } catch (_: Exception) {}
+            screenOffReceiver = null
+        }
         val view = overlayView ?: return
         try {
             windowManager.removeView(view)

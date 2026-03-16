@@ -4,8 +4,6 @@ package com.routemate.app
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 
 /**
  * OutgoingCallReceiver
@@ -40,8 +38,8 @@ class OutgoingCallReceiver : BroadcastReceiver() {
         // Cancel the outgoing call — the user will choose what to do via the popup.
         resultData = null
 
-        Handler(Looper.getMainLooper()).post {
-            OverlayManager(context.applicationContext).show(number)
-        }
+        // Start the popup as a transparent Activity so hardware keys (ENDCALL,
+        // CALL, BACK) work natively without any special permissions.
+        PopupActivity.start(context.applicationContext, number)
     }
 }

@@ -76,4 +76,5 @@ string toast_enter_number
 string toast_no_permission
 string toast_saved
 style Theme.RouteMate
+style Theme.RouteMate.Popup
 xml accessibility_service_config
