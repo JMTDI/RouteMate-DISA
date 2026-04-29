@@ -15,13 +15,18 @@ jobs:
   build:
     name: Build Release APK
     runs-on: ubuntu-latest
+    env:
+      KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
 
     steps:
       # ── Checkout ──────────────────────────────────────────────────────────────
       - name: Checkout source
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0          # needed for changelog generation
+          fetch-depth: 0
 
       # ── Java ──────────────────────────────────────────────────────────────────
       - name: Set up JDK 17
@@ -51,7 +56,7 @@ jobs:
 
       # ── Sign (optional — skipped if secrets are absent) ───────────────────────
       - name: Sign APK
-        if: ${{ secrets.KEYSTORE_BASE64 != '' && secrets.KEY_ALIAS != '' && secrets.KEY_PASSWORD != '' && secrets.STORE_PASSWORD != '' }}
+        if: ${{ env.KEYSTORE_BASE64 != '' && env.KEY_ALIAS != '' && env.KEY_PASSWORD != '' && env.STORE_PASSWORD != '' }}
         uses: r0adkll/sign-android-release@v1
         id: sign
         with:
@@ -92,7 +97,6 @@ jobs:
           else
             LOG=$(git log --pretty=format:"- %s (%h)" | head -30)
           fi
-          # Escape for multiline GITHUB_OUTPUT
           echo "log<<EOF" >> "$GITHUB_OUTPUT"
           echo "$LOG"     >> "$GITHUB_OUTPUT"
           echo "EOF"       >> "$GITHUB_OUTPUT"
