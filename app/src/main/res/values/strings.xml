@@ -50,6 +50,18 @@
     <string name="dialog_perm_message">The CALL_PHONE permission is required for RouteMate to place calls.
 Please grant it when prompted or enable it in System Settings → Apps → RouteMate → Permissions.</string>
 
+    <!-- Caller IDs -->
+    <string name="label_caller_id_pause">Pause before Caller ID entry</string>
+    <string name="label_caller_ids">Outbound Caller IDs</string>
+    <string name="hint_caller_id">e.g. 15551234567</string>
+    <string name="btn_add_caller_id">+ Add Caller ID</string>
+    <string name="dialog_add_caller_title">Add Caller ID</string>
+    <string name="dialog_add_caller_message">Enter the outbound caller ID number to send after the PIN:</string>
+    <string name="label_no_caller_ids">None — caller enters manually on DISA</string>
+    <string name="toast_caller_id_empty">Please enter a number.</string>
+    <string name="toast_caller_id_duplicate">This number is already in the list.</string>
+    <string name="select_caller_id_title">Select Outbound Caller ID</string>
+
     <!-- Toasts -->
     <string name="toast_saved">Settings saved!</string>
     <string name="toast_enter_number">Please enter a phone number.</string>

@@ -1,0 +1,144 @@
+name: Build & Draft Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+jobs:
+  build:
+    name: Build Release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── Checkout ────────────────────────────────────────────────────────────
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # needed for changelog generation
+
+      # ── Java ────────────────────────────────────────────────────────────────
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      # ── Gradle cache ────────────────────────────────────────────────────────
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      # ── Make gradlew executable ──────────────────────────────────────────────
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      # ── Build ───────────────────────────────────────────────────────────────
+      - name: Build release APK
+        run: ./gradlew assembleRelease --no-daemon
+
+      # ── Sign (optional — skipped if secrets are absent) ─────────────────────
+      - name: Sign APK
+        if: |
+          secrets.KEYSTORE_BASE64 != '' &&
+          secrets.KEY_ALIAS != '' &&
+          secrets.KEY_PASSWORD != '' &&
+          secrets.STORE_PASSWORD != ''
+        uses: r0adkll/sign-android-release@v1
+        id: sign
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      # ── Resolve the APK path (signed or unsigned) ───────────────────────────
+      - name: Resolve APK artifact path
+        id: apk_path
+        run: |
+          if [ -f "${{ steps.sign.outputs.signedReleaseFile }}" ]; then
+            echo "path=${{ steps.sign.outputs.signedReleaseFile }}" >> "$GITHUB_OUTPUT"
+          else
+            APK=$(find app/build/outputs/apk/release -name "*.apk" | head -1)
+            echo "path=$APK" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ── Determine the release tag ────────────────────────────────────────────
+      - name: Determine release tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "value=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ── Collect commits since the last tag for the changelog ────────────────
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -n "$PREV_TAG" ]; then
+            LOG=$(git log "$PREV_TAG"..HEAD --pretty=format:"- %s (%h)" | head -30)
+          else
+            LOG=$(git log --pretty=format:"- %s (%h)" | head -30)
+          fi
+          # Escape for multiline GITHUB_OUTPUT
+          echo "log<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$LOG"     >> "$GITHUB_OUTPUT"
+          echo "EOF"       >> "$GITHUB_OUTPUT"
+
+      # ── Create / update the release draft ───────────────────────────────────
+      - name: Create release draft
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.value }}
+          name: "RouteMate ${{ steps.tag.outputs.value }}"
+          draft: true
+          prerelease: false
+          body: |
+            ## RouteMate — DISA Dialer  ${{ steps.tag.outputs.value }}
+
+            Route your Android outgoing calls through a **FusionPBX DISA** line with a
+            single tap. RouteMate intercepts the call, dials your PBX, sends your PIN,
+            injects the pre-configured **outbound caller ID**, and finally transfers to
+            the destination — all automatically.
+
+            ---
+
+            ### What's new
+            ${{ steps.changelog.outputs.log }}
+
+            ---
+
+            ### Installation
+            1. Download **RouteMate-${{ steps.tag.outputs.value }}.apk** below.
+            2. Enable *Install from unknown sources* on your device.
+            3. Install the APK and open **RouteMate**.
+            4. Grant **Accessibility Service**, **Draw Over Apps**, and **Call Phone** permissions.
+            5. Enter your DISA number, PIN, optional outbound caller IDs, and pause timings.
+            6. Tap **Save Settings** — you're ready to dial.
+
+            ### Requirements
+            - Android 8.0+ (API 26)
+            - A FusionPBX (or compatible) DISA extension
+
+            ---
+
+            > **Note:** This is a draft release. Please review before publishing.
+          files: ${{ steps.apk_path.outputs.path }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

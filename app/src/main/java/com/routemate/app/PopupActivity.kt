@@ -1,6 +1,7 @@
 package com.routemate.app
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -69,8 +70,18 @@ class PopupActivity : Activity() {
         val btnCancel = findViewById<Button>(R.id.btn_overlay_cancel)
 
         btnVia.setOnClickListener {
-            finish()
-            handler.postDelayed({ OverlayManager.placeDisaCall(applicationContext, number) }, 400)
+            val callerIds = getSortedCallerIds()
+            when {
+                callerIds.isEmpty() -> {
+                    finish()
+                    handler.postDelayed({ OverlayManager.placeDisaCall(applicationContext, number) }, 400)
+                }
+                callerIds.size == 1 -> {
+                    finish()
+                    handler.postDelayed({ OverlayManager.placeDisaCall(applicationContext, number, callerIds.first()) }, 400)
+                }
+                else -> showCallerIdPicker(number, callerIds)
+            }
         }
 
         btnDirect.setOnClickListener {
@@ -85,8 +96,25 @@ class PopupActivity : Activity() {
         btnVia.requestFocus()
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        return when (keyCode) {
+    private fun getSortedCallerIds(): List<String> {
+        val prefs = getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
+        return (prefs.getStringSet(MainActivity.KEY_CALLER_IDS, emptySet()) ?: emptySet())
+            .toList().sorted()
+    }
+
+    private fun showCallerIdPicker(destination: String, callerIds: List<String>) {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.select_caller_id_title))
+            .setItems(callerIds.toTypedArray()) { _, which ->
+                val selected = callerIds[which]
+                finish()
+                handler.postDelayed({ OverlayManager.placeDisaCall(applicationContext, destination, selected) }, 400)
+            }
+            .setNegativeButton(getString(R.string.dialog_cancel), null)
+            .show()
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {        return when (keyCode) {
             KeyEvent.KEYCODE_ENDCALL,
             KeyEvent.KEYCODE_POWER -> {
                 finish()

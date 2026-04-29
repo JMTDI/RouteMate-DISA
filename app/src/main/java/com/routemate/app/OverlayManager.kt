@@ -177,29 +177,46 @@ class OverlayManager(private val context: Context) {
         /**
          * Build DISA URI and place the call using TelecomManager.
          *
-         *   tel:{disaNumber}{initialPause}{pin}#{destPause}{destination}#
+         *   tel:{disaNumber}{initialPause}{pin}#{callerIdPause}{callerId}#{destPause}{destination}#
+         *
+         * If [callerId] is blank, the caller-ID step is omitted (the DISA system
+         * will prompt the user to enter it manually via DTMF).
          */
-        fun placeDisaCall(context: Context, destination: String) {
+        fun placeDisaCall(context: Context, destination: String, callerId: String = "") {
             val prefs = context.getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
             val disaNumber = prefs.getString(MainActivity.KEY_DISA_NUMBER, "") ?: ""
             val pin        = prefs.getString(MainActivity.KEY_PIN, "") ?: ""
-            val initialPauseSeconds = prefs.getInt(MainActivity.KEY_INITIAL_PAUSE, 1) + 1
-            val destPauseSeconds    = prefs.getInt(MainActivity.KEY_DEST_PAUSE, 1) + 1
+            val initialPauseSeconds    = prefs.getInt(MainActivity.KEY_INITIAL_PAUSE, 1) + 1
+            val callerIdPauseSeconds   = prefs.getInt(MainActivity.KEY_CALLER_ID_PAUSE, 1) + 1
+            val destPauseSeconds       = prefs.getInt(MainActivity.KEY_DEST_PAUSE, 1) + 1
 
-            val cleanDisa = disaNumber.replace(Regex("[^0-9+]"), "")
-            val cleanPin  = pin.replace(Regex("[^0-9*#]"), "")
-            val cleanDest = destination.replace(Regex("[^0-9+*#]"), "")
+            val cleanDisa     = disaNumber.replace(Regex("[^0-9+]"), "")
+            val cleanPin      = pin.replace(Regex("[^0-9*#]"), "")
+            val cleanCallerId = callerId.replace(Regex("[^0-9+*#]"), "")
+            val cleanDest     = destination.replace(Regex("[^0-9+*#]"), "")
 
-            val initialPauseStr = ",".repeat(initialPauseSeconds)
-            val destPauseStr    = ",".repeat(destPauseSeconds)
+            val initialPauseStr    = ",".repeat(initialPauseSeconds)
+            val callerIdPauseStr   = ",".repeat(callerIdPauseSeconds)
+            val destPauseStr       = ",".repeat(destPauseSeconds)
 
             // IMPORTANT: Uri.parse() treats '#' as a fragment separator, which silently
             // drops everything after the PIN's '#' (including the destination number).
             // Uri.fromParts() encodes '#' as %23 so the full dial string reaches the modem.
-            val dialString = if (cleanPin.isNotBlank()) {
-                "$cleanDisa$initialPauseStr${cleanPin}#$destPauseStr${cleanDest}#"
-            } else {
-                "$cleanDisa$initialPauseStr$destPauseStr${cleanDest}#"
+            val dialString = buildString {
+                append(cleanDisa)
+                append(initialPauseStr)
+                if (cleanPin.isNotBlank()) {
+                    append(cleanPin)
+                    append("#")
+                }
+                if (cleanCallerId.isNotBlank()) {
+                    append(callerIdPauseStr)
+                    append(cleanCallerId)
+                    append("#")
+                }
+                append(destPauseStr)
+                append(cleanDest)
+                append("#")
             }
 
             suppressNextCall = true

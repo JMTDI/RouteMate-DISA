@@ -8,9 +8,11 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -26,6 +28,8 @@ class MainActivity : AppCompatActivity() {
         const val KEY_PIN = "pin"
         const val KEY_INITIAL_PAUSE = "initial_pause"
         const val KEY_DEST_PAUSE = "dest_pause"
+        const val KEY_CALLER_ID_PAUSE = "caller_id_pause"
+        const val KEY_CALLER_IDS = "caller_ids"
 
         private const val REQUEST_CALL_PERMISSION = 1002
     }
@@ -34,6 +38,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etPin: EditText
     private lateinit var spinnerInitialPause: Spinner
     private lateinit var spinnerDestPause: Spinner
+    private lateinit var spinnerCallerIdPause: Spinner
+    private lateinit var llCallerIds: LinearLayout
+    private lateinit var btnAddCallerId: Button
     private lateinit var btnAccessibility: Button
     private lateinit var btnOverlay: Button
     private lateinit var btnSave: Button
@@ -43,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvStatusDisa: TextView
 
     private var pendingTestNumber: String = ""
+    private var pendingCallerId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +60,9 @@ class MainActivity : AppCompatActivity() {
         etPin = findViewById(R.id.et_pin)
         spinnerInitialPause = findViewById(R.id.spinner_initial_pause)
         spinnerDestPause = findViewById(R.id.spinner_dest_pause)
+        spinnerCallerIdPause = findViewById(R.id.spinner_caller_id_pause)
+        llCallerIds = findViewById(R.id.ll_caller_ids)
+        btnAddCallerId = findViewById(R.id.btn_add_caller_id)
         btnAccessibility = findViewById(R.id.btn_accessibility)
         btnOverlay = findViewById(R.id.btn_overlay)
         btnSave = findViewById(R.id.btn_save)
@@ -76,6 +87,7 @@ class MainActivity : AppCompatActivity() {
         }
         btnSave.setOnClickListener { saveSettings() }
         btnTest.setOnClickListener { showTestDialog() }
+        btnAddCallerId.setOnClickListener { showAddCallerIdDialog() }
     }
 
     override fun onResume() {
@@ -97,6 +109,10 @@ class MainActivity : AppCompatActivity() {
         val adapterDest = ArrayAdapter(this, android.R.layout.simple_spinner_item, pauseOptions)
         adapterDest.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerDestPause.adapter = adapterDest
+
+        val adapterCallerIdPause = ArrayAdapter(this, android.R.layout.simple_spinner_item, pauseOptions)
+        adapterCallerIdPause.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerCallerIdPause.adapter = adapterCallerIdPause
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -109,6 +125,8 @@ class MainActivity : AppCompatActivity() {
         etPin.setText(prefs.getString(KEY_PIN, ""))
         spinnerInitialPause.setSelection(prefs.getInt(KEY_INITIAL_PAUSE, 1))
         spinnerDestPause.setSelection(prefs.getInt(KEY_DEST_PAUSE, 1))
+        spinnerCallerIdPause.setSelection(prefs.getInt(KEY_CALLER_ID_PAUSE, 1))
+        refreshCallerIdList(prefs.getStringSet(KEY_CALLER_IDS, emptySet()) ?: emptySet())
     }
 
     private fun saveSettings() {
@@ -118,6 +136,7 @@ class MainActivity : AppCompatActivity() {
             putString(KEY_PIN, etPin.text.toString().trim())
             putInt(KEY_INITIAL_PAUSE, spinnerInitialPause.selectedItemPosition)
             putInt(KEY_DEST_PAUSE, spinnerDestPause.selectedItemPosition)
+            putInt(KEY_CALLER_ID_PAUSE, spinnerCallerIdPause.selectedItemPosition)
             apply()
         }
         Toast.makeText(this, getString(R.string.toast_saved), Toast.LENGTH_SHORT).show()
@@ -188,7 +207,12 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton(getString(R.string.dialog_call)) { _, _ ->
                 val number = input.text.toString().trim()
                 if (number.isNotBlank()) {
-                    checkPermissionAndTestCall(number)
+                    val callerIds = getSortedCallerIds()
+                    when {
+                        callerIds.isEmpty() -> checkPermissionAndTestCall(number, "")
+                        callerIds.size == 1 -> checkPermissionAndTestCall(number, callerIds.first())
+                        else -> showCallerIdPickerForTest(number, callerIds)
+                    }
                 } else {
                     Toast.makeText(this, getString(R.string.toast_enter_number), Toast.LENGTH_SHORT).show()
                 }
@@ -197,11 +221,22 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun checkPermissionAndTestCall(number: String) {
+    private fun showCallerIdPickerForTest(destination: String, callerIds: List<String>) {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.select_caller_id_title))
+            .setItems(callerIds.toTypedArray()) { _, which ->
+                checkPermissionAndTestCall(destination, callerIds[which])
+            }
+            .setNegativeButton(getString(R.string.dialog_cancel), null)
+            .show()
+    }
+
+    private fun checkPermissionAndTestCall(number: String, callerId: String) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
             != PackageManager.PERMISSION_GRANTED
         ) {
             pendingTestNumber = number
+            pendingCallerId = callerId
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(
@@ -211,7 +246,7 @@ class MainActivity : AppCompatActivity() {
                 REQUEST_CALL_PERMISSION
             )
         } else {
-            OverlayManager.placeDisaCall(this, number)
+            OverlayManager.placeDisaCall(this, number, callerId)
         }
     }
 
@@ -224,8 +259,9 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CALL_PERMISSION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (pendingTestNumber.isNotBlank()) {
-                    OverlayManager.placeDisaCall(this, pendingTestNumber)
+                    OverlayManager.placeDisaCall(this, pendingTestNumber, pendingCallerId)
                     pendingTestNumber = ""
+                    pendingCallerId = ""
                 }
             } else {
                 AlertDialog.Builder(this)
@@ -235,5 +271,115 @@ class MainActivity : AppCompatActivity() {
                     .show()
             }
         }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Caller ID management
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private fun getSortedCallerIds(): List<String> {
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return (prefs.getStringSet(KEY_CALLER_IDS, emptySet()) ?: emptySet()).toList().sorted()
+    }
+
+    private fun refreshCallerIdList(ids: Set<String>) {
+        llCallerIds.removeAllViews()
+        if (ids.isEmpty()) {
+            val tv = TextView(this).apply {
+                text = getString(R.string.label_no_caller_ids)
+                textSize = 14f
+                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.hint_color))
+                setPadding(0, 4, 0, 8)
+            }
+            llCallerIds.addView(tv)
+        } else {
+            for (id in ids.sorted()) {
+                addCallerIdRow(id)
+            }
+        }
+    }
+
+    private fun addCallerIdRow(number: String) {
+        val dp6 = (6 * resources.displayMetrics.density).toInt()
+        val dp8 = (8 * resources.displayMetrics.density).toInt()
+
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { bottomMargin = dp6 }
+        }
+
+        val tv = TextView(this).apply {
+            text = number
+            textSize = 16f
+            setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
+            gravity = Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            ).apply { gravity = Gravity.CENTER_VERTICAL }
+            setPadding(dp8, 0, 0, 0)
+        }
+
+        val btnRemove = Button(this).apply {
+            text = "✕"
+            textSize = 14f
+            setTextColor(ContextCompat.getColor(this@MainActivity, R.color.status_error))
+            background = null
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            setOnClickListener { removeCallerId(number) }
+        }
+
+        row.addView(tv)
+        row.addView(btnRemove)
+        llCallerIds.addView(row)
+    }
+
+    private fun removeCallerId(number: String) {
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val ids = (prefs.getStringSet(KEY_CALLER_IDS, emptySet()) ?: emptySet()).toMutableSet()
+        ids.remove(number)
+        prefs.edit().putStringSet(KEY_CALLER_IDS, ids).apply()
+        refreshCallerIdList(ids)
+    }
+
+    private fun showAddCallerIdDialog() {
+        val input = EditText(this).apply {
+            hint = getString(R.string.hint_caller_id)
+            inputType = android.text.InputType.TYPE_CLASS_PHONE
+            isFocusableInTouchMode = true
+            setPadding(24, 16, 24, 16)
+            setTextColor(ContextCompat.getColor(context, R.color.white))
+            setHintTextColor(ContextCompat.getColor(context, R.color.hint_color))
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.dialog_add_caller_title))
+            .setMessage(getString(R.string.dialog_add_caller_message))
+            .setView(input)
+            .setPositiveButton(getString(R.string.dialog_ok)) { _, _ ->
+                val number = input.text.toString().trim().replace(Regex("[^0-9+]"), "")
+                if (number.isBlank()) {
+                    Toast.makeText(this, getString(R.string.toast_caller_id_empty), Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                val ids = (prefs.getStringSet(KEY_CALLER_IDS, emptySet()) ?: emptySet()).toMutableSet()
+                if (ids.contains(number)) {
+                    Toast.makeText(this, getString(R.string.toast_caller_id_duplicate), Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                ids.add(number)
+                prefs.edit().putStringSet(KEY_CALLER_IDS, ids).apply()
+                refreshCallerIdList(ids)
+            }
+            .setNegativeButton(getString(R.string.dialog_cancel), null)
+            .show()
     }
 }

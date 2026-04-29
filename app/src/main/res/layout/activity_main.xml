@@ -120,6 +120,54 @@
             android:layout_height="48dp"
             android:focusable="true"
             android:background="@drawable/focused_button_bg"
+            android:nextFocusDown="@+id/spinner_caller_id_pause"
+            android:layout_marginBottom="12dp" />
+
+        <!-- ── Pause before Caller ID entry ──────────────────────────────── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_caller_id_pause"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:paddingBottom="4dp" />
+
+        <Spinner
+            android:id="@+id/spinner_caller_id_pause"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:focusable="true"
+            android:background="@drawable/focused_button_bg"
+            android:nextFocusUp="@id/spinner_dest_pause"
+            android:nextFocusDown="@+id/btn_add_caller_id"
+            android:layout_marginBottom="12dp" />
+
+        <!-- ── Outbound Caller IDs ────────────────────────────────────────── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_caller_ids"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:paddingBottom="4dp" />
+
+        <LinearLayout
+            android:id="@+id/ll_caller_ids"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="4dp" />
+
+        <Button
+            android:id="@+id/btn_add_caller_id"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/btn_add_caller_id"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:background="@drawable/focused_button_bg"
+            android:focusable="true"
+            android:nextFocusUp="@id/spinner_caller_id_pause"
             android:nextFocusDown="@+id/btn_accessibility"
             android:layout_marginBottom="20dp" />
 
@@ -133,7 +181,7 @@
             android:textColor="@color/white"
             android:background="@drawable/focused_button_bg"
             android:focusable="true"
-            android:nextFocusUp="@id/spinner_dest_pause"
+            android:nextFocusUp="@id/btn_add_caller_id"
             android:nextFocusDown="@+id/btn_overlay"
             android:layout_marginBottom="8dp" />
 
