@@ -72,7 +72,8 @@ jobs:
           alias: ${{ secrets.KEY_ALIAS }}
           keyStorePassword: ${{ secrets.STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
-          buildToolsVersion: ${{ steps.build_tools.outputs.version }}
+        env:
+          ANDROID_BUILD_TOOLS_VERSION: ${{ steps.build_tools.outputs.version }}
 
       # ── Resolve the APK path (signed or unsigned) ─────────────────────────────
       - name: Resolve APK artifact path
