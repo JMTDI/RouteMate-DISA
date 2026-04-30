@@ -54,26 +54,23 @@ jobs:
       - name: Build release APK
         run: ./gradlew assembleRelease --no-daemon
 
-      # ── Detect installed build-tools version ──────────────────────────────────
-      - name: Detect build-tools version
-        id: build_tools
-        run: |
-          BUILD_TOOLS=$(ls /usr/local/lib/android/sdk/build-tools/ | sort -V | tail -1)
-          echo "version=$BUILD_TOOLS" >> "$GITHUB_OUTPUT"
-
       # ── Sign (optional — skipped if secrets are absent) ───────────────────────
       - name: Sign APK
         if: ${{ env.KEYSTORE_BASE64 != '' && env.KEY_ALIAS != '' && env.KEY_PASSWORD != '' && env.STORE_PASSWORD != '' }}
-        uses: r0adkll/sign-android-release@v1
         id: sign
-        with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
-          alias: ${{ secrets.KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          ANDROID_BUILD_TOOLS_VERSION: ${{ steps.build_tools.outputs.version }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > keystore.jks
+          APK=$(find app/build/outputs/apk/release -name "*.apk" | head -1)
+          APKSIGNER=$(find /usr/local/lib/android/sdk/build-tools -name "apksigner" | sort -V | tail -1)
+          "$APKSIGNER" sign \
+            --ks keystore.jks \
+            --ks-key-alias "$KEY_ALIAS" \
+            --ks-pass pass:"$STORE_PASSWORD" \
+            --key-pass pass:"$KEY_PASSWORD" \
+            --out "${APK%.*}-signed.apk" \
+            "$APK"
+          echo "signedReleaseFile=${APK%.*}-signed.apk" >> "$GITHUB_OUTPUT"
+          rm -f keystore.jks
 
       # ── Resolve the APK path (signed or unsigned) ─────────────────────────────
       - name: Resolve APK artifact path
