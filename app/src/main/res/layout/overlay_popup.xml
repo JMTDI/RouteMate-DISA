@@ -45,19 +45,21 @@
         android:gravity="center"
         android:paddingBottom="16dp" />
 
-    <!-- ── "Via RouteMate" button (default focus) ────────────────────────── -->
-    <Button
-        android:id="@+id/btn_overlay_via_routemate"
+    <!-- ── Caller ID buttons — populated dynamically by PopupActivity ──────── -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:text="@string/btn_via_routemate"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:background="@drawable/focused_button_bg"
-        android:focusable="true"
-        android:nextFocusDown="@+id/btn_overlay_direct"
-        android:layout_marginBottom="8dp" />
+        android:layout_height="wrap_content"
+        android:maxHeight="200dp"
+        android:overScrollMode="ifContentScrolls"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+            android:id="@+id/ll_popup_caller_ids"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </ScrollView>
 
     <!-- ── "Direct Call" button ──────────────────────────────────────────── -->
     <Button
@@ -69,7 +71,6 @@
         android:textColor="@color/white"
         android:background="@drawable/focused_button_bg"
         android:focusable="true"
-        android:nextFocusUp="@id/btn_overlay_via_routemate"
         android:nextFocusDown="@+id/btn_overlay_cancel"
         android:layout_marginBottom="8dp" />
 

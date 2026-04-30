@@ -18,9 +18,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 /**
  * OverlayManager
@@ -61,30 +62,52 @@ class OverlayManager(private val context: Context) {
 
         val view = LayoutInflater.from(context).inflate(R.layout.overlay_popup, null) as PopupRootLayout
 
-        val tvTitle  = view.findViewById<TextView>(R.id.tv_overlay_title)
-        val btnVia   = view.findViewById<Button>(R.id.btn_overlay_via_routemate)
+        val tvTitle   = view.findViewById<TextView>(R.id.tv_overlay_title)
+        val llCids    = view.findViewById<LinearLayout>(R.id.ll_popup_caller_ids)
         val btnDirect = view.findViewById<Button>(R.id.btn_overlay_direct)
         val btnCancel = view.findViewById<Button>(R.id.btn_overlay_cancel)
 
         tvTitle.text = context.getString(R.string.overlay_title, number)
 
-        btnVia.setOnClickListener {
-            dismiss()
-            handler.postDelayed({ placeDisaCall(context, number) }, 500)
+        val callerIds = getCallerIds()
+        val buttons   = mutableListOf<Button>()
+
+        if (callerIds.isEmpty()) {
+            val btn = makeCallerButton(view.context, context.getString(R.string.btn_via_routemate))
+            btn.setOnClickListener {
+                dismiss()
+                handler.postDelayed({ placeDisaCall(context, number) }, 500)
+            }
+            llCids.addView(btn)
+            buttons.add(btn)
+        } else {
+            for ((name, cidNumber) in callerIds) {
+                val btn = makeCallerButton(view.context, name)
+                btn.setOnClickListener {
+                    dismiss()
+                    handler.postDelayed({ placeDisaCall(context, number, cidNumber) }, 500)
+                }
+                llCids.addView(btn)
+                buttons.add(btn)
+            }
         }
+
+        // Wire D-pad navigation
+        buttons.forEach { it.id = View.generateViewId() }
+        for (i in buttons.indices) {
+            buttons[i].nextFocusDownId = if (i < buttons.size - 1) buttons[i + 1].id else btnDirect.id
+            buttons[i].nextFocusUpId   = if (i > 0) buttons[i - 1].id else btnCancel.id
+        }
+        btnDirect.nextFocusUpId   = buttons.lastOrNull()?.id ?: btnCancel.id
+        btnCancel.nextFocusDownId = buttons.firstOrNull()?.id ?: btnDirect.id
 
         btnDirect.setOnClickListener {
             dismiss()
             handler.postDelayed({ placeDirectCall(context, number) }, 500)
         }
+        btnCancel.setOnClickListener { dismiss() }
 
-        btnCancel.setOnClickListener {
-            dismiss()
-        }
-
-        // Hardware call/end-call keys intercepted at root so they work
-        // regardless of which button has D-pad focus.
-        view.onCallKey = { view.findFocus()?.performClick() }
+        view.onCallKey    = { view.findFocus()?.performClick() }
         view.onEndCallKey = { btnCancel.performClick() }
 
         val params = buildLayoutParams(focusable = false)
@@ -109,7 +132,7 @@ class OverlayManager(private val context: Context) {
                 try {
                     windowManager.updateViewLayout(view, buildLayoutParams(focusable = true))
                 } catch (_: IllegalArgumentException) {}
-                btnVia.requestFocus()
+                buttons.firstOrNull()?.requestFocus()
             }
         }
     }
@@ -156,6 +179,38 @@ class OverlayManager(private val context: Context) {
         ).apply {
             gravity = Gravity.CENTER
             dimAmount = 0.6f
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Caller ID helpers (instance-side)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private fun getCallerIds(): List<Pair<String, String>> {
+        val prefs = context.getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
+        val raw   = prefs.getStringSet(MainActivity.KEY_CALLER_IDS, emptySet()) ?: emptySet()
+        return raw.map { entry ->
+            val idx = entry.indexOf(MainActivity.CID_SEP)
+            if (idx >= 0) entry.substring(0, idx) to entry.substring(idx + MainActivity.CID_SEP.length)
+            else entry to entry
+        }.sortedBy { it.first }
+    }
+
+    private fun makeCallerButton(ctx: android.content.Context, label: String): Button {
+        val density = ctx.resources.displayMetrics.density
+        val dp8     = (8f  * density).toInt()
+        val dp52    = (52f * density).toInt()
+        return Button(ctx).apply {
+            text     = label
+            textSize = 16f
+            isAllCaps = false
+            setTextColor(ContextCompat.getColor(ctx, R.color.white))
+            background = ContextCompat.getDrawable(ctx, R.drawable.focused_button_bg)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dp52
+            ).apply { bottomMargin = dp8 }
+            isFocusable            = true
+            isFocusableInTouchMode = true
         }
     }
 

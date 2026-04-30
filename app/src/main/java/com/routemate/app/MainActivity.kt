@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity() {
         const val KEY_DEST_PAUSE = "dest_pause"
         const val KEY_CALLER_ID_PAUSE = "caller_id_pause"
         const val KEY_CALLER_IDS = "caller_ids"
+        /** Separator between display name and phone number stored in the StringSet. */
+        const val CID_SEP = "|||"
 
         private const val REQUEST_CALL_PERMISSION = 1002
     }
@@ -209,9 +211,9 @@ class MainActivity : AppCompatActivity() {
                 if (number.isNotBlank()) {
                     val callerIds = getSortedCallerIds()
                     when {
-                        callerIds.isEmpty() -> checkPermissionAndTestCall(number, "")
-                        callerIds.size == 1 -> checkPermissionAndTestCall(number, callerIds.first())
-                        else -> showCallerIdPickerForTest(number, callerIds)
+                        callerIds.isEmpty()  -> checkPermissionAndTestCall(number, "")
+                        callerIds.size == 1  -> checkPermissionAndTestCall(number, callerIds.first().second)
+                        else                 -> showCallerIdPickerForTest(number, callerIds)
                     }
                 } else {
                     Toast.makeText(this, getString(R.string.toast_enter_number), Toast.LENGTH_SHORT).show()
@@ -221,11 +223,11 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showCallerIdPickerForTest(destination: String, callerIds: List<String>) {
+    private fun showCallerIdPickerForTest(destination: String, callerIds: List<Pair<String, String>>) {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.select_caller_id_title))
-            .setItems(callerIds.toTypedArray()) { _, which ->
-                checkPermissionAndTestCall(destination, callerIds[which])
+            .setItems(callerIds.map { it.first }.toTypedArray()) { _, which ->
+                checkPermissionAndTestCall(destination, callerIds[which].second)
             }
             .setNegativeButton(getString(R.string.dialog_cancel), null)
             .show()
@@ -277,9 +279,14 @@ class MainActivity : AppCompatActivity() {
     // Caller ID management
     // ─────────────────────────────────────────────────────────────────────────
 
-    private fun getSortedCallerIds(): List<String> {
+    private fun getSortedCallerIds(): List<Pair<String, String>> {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        return (prefs.getStringSet(KEY_CALLER_IDS, emptySet()) ?: emptySet()).toList().sorted()
+        val raw   = prefs.getStringSet(KEY_CALLER_IDS, emptySet()) ?: emptySet()
+        return raw.map { entry ->
+            val idx = entry.indexOf(CID_SEP)
+            if (idx >= 0) entry.substring(0, idx) to entry.substring(idx + CID_SEP.length)
+            else entry to entry  // backward compat: old entry with no name
+        }.sortedBy { it.first }
     }
 
     private fun refreshCallerIdList(ids: Set<String>) {
@@ -293,13 +300,19 @@ class MainActivity : AppCompatActivity() {
             }
             llCallerIds.addView(tv)
         } else {
-            for (id in ids.sorted()) {
-                addCallerIdRow(id)
-            }
+            // Sort by display name for consistent ordering
+            ids.sortedBy { entry ->
+                val idx = entry.indexOf(CID_SEP)
+                if (idx >= 0) entry.substring(0, idx) else entry
+            }.forEach { entry -> addCallerIdRow(entry) }
         }
     }
 
-    private fun addCallerIdRow(number: String) {
+    private fun addCallerIdRow(entry: String) {
+        val idx    = entry.indexOf(CID_SEP)
+        val name   = if (idx >= 0) entry.substring(0, idx) else entry
+        val number = if (idx >= 0) entry.substring(idx + CID_SEP.length) else entry
+
         val dp6 = (6 * resources.displayMetrics.density).toInt()
         val dp8 = (8 * resources.displayMetrics.density).toInt()
 
@@ -312,8 +325,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         val tv = TextView(this).apply {
-            text = number
-            textSize = 16f
+            // Show "Name\nnumber" when name differs from number, otherwise just the number
+            text = if (name != number) "$name\n$number" else number
+            textSize = 15f
             setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
             gravity = Gravity.CENTER_VERTICAL
             layoutParams = LinearLayout.LayoutParams(
@@ -333,7 +347,7 @@ class MainActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            setOnClickListener { removeCallerId(number) }
+            setOnClickListener { removeCallerId(entry) }
         }
 
         row.addView(tv)
@@ -341,41 +355,74 @@ class MainActivity : AppCompatActivity() {
         llCallerIds.addView(row)
     }
 
-    private fun removeCallerId(number: String) {
+    private fun removeCallerId(entry: String) {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val ids = (prefs.getStringSet(KEY_CALLER_IDS, emptySet()) ?: emptySet()).toMutableSet()
-        ids.remove(number)
+        val ids   = (prefs.getStringSet(KEY_CALLER_IDS, emptySet()) ?: emptySet()).toMutableSet()
+        ids.remove(entry)
         prefs.edit().putStringSet(KEY_CALLER_IDS, ids).apply()
         refreshCallerIdList(ids)
     }
 
     private fun showAddCallerIdDialog() {
-        val input = EditText(this).apply {
-            hint = getString(R.string.hint_caller_id)
-            inputType = android.text.InputType.TYPE_CLASS_PHONE
+        val dp24 = (24 * resources.displayMetrics.density).toInt()
+        val dp8  = (8  * resources.displayMetrics.density).toInt()
+
+        // Two-field form: name (optional) + number
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp24, dp8, dp24, dp8)
+        }
+
+        val etName = EditText(this).apply {
+            hint = getString(R.string.hint_caller_id_name)
+            inputType = android.text.InputType.TYPE_CLASS_TEXT or
+                        android.text.InputType.TYPE_TEXT_FLAG_CAP_WORDS
             isFocusableInTouchMode = true
-            setPadding(24, 16, 24, 16)
+            setPadding(0, dp8, 0, dp8)
             setTextColor(ContextCompat.getColor(context, R.color.white))
             setHintTextColor(ContextCompat.getColor(context, R.color.hint_color))
         }
 
+        val etNumber = EditText(this).apply {
+            hint = getString(R.string.hint_caller_id)
+            inputType = android.text.InputType.TYPE_CLASS_PHONE
+            isFocusableInTouchMode = true
+            setPadding(0, dp8, 0, dp8)
+            setTextColor(ContextCompat.getColor(context, R.color.white))
+            setHintTextColor(ContextCompat.getColor(context, R.color.hint_color))
+        }
+
+        container.addView(etName)
+        container.addView(etNumber)
+
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.dialog_add_caller_title))
             .setMessage(getString(R.string.dialog_add_caller_message))
-            .setView(input)
+            .setView(container)
             .setPositiveButton(getString(R.string.dialog_ok)) { _, _ ->
-                val number = input.text.toString().trim().replace(Regex("[^0-9+]"), "")
+                val number = etNumber.text.toString().trim().replace(Regex("[^0-9+]"), "")
                 if (number.isBlank()) {
                     Toast.makeText(this, getString(R.string.toast_caller_id_empty), Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
+                val nameRaw  = etName.text.toString().trim()
+                val name     = if (nameRaw.isBlank()) number else nameRaw
+                val entry    = "$name$CID_SEP$number"
+
                 val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                val ids = (prefs.getStringSet(KEY_CALLER_IDS, emptySet()) ?: emptySet()).toMutableSet()
-                if (ids.contains(number)) {
+                val ids   = (prefs.getStringSet(KEY_CALLER_IDS, emptySet()) ?: emptySet()).toMutableSet()
+
+                // Duplicate check on the phone number portion
+                val existingNumbers = ids.map { e ->
+                    val i = e.indexOf(CID_SEP)
+                    if (i >= 0) e.substring(i + CID_SEP.length) else e
+                }
+                if (existingNumbers.contains(number)) {
                     Toast.makeText(this, getString(R.string.toast_caller_id_duplicate), Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
-                ids.add(number)
+
+                ids.add(entry)
                 prefs.edit().putStringSet(KEY_CALLER_IDS, ids).apply()
                 refreshCallerIdList(ids)
             }

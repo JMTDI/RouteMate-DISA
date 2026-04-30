@@ -53,13 +53,14 @@ Please grant it when prompted or enable it in System Settings → Apps → Route
     <!-- Caller IDs -->
     <string name="label_caller_id_pause">Pause before Caller ID entry</string>
     <string name="label_caller_ids">Outbound Caller IDs</string>
-    <string name="hint_caller_id">e.g. 15551234567</string>
+    <string name="hint_caller_id_name">Name (e.g. Office, Personal)</string>
+    <string name="hint_caller_id">Phone number (e.g. 15551234567)</string>
     <string name="btn_add_caller_id">+ Add Caller ID</string>
     <string name="dialog_add_caller_title">Add Caller ID</string>
-    <string name="dialog_add_caller_message">Enter the outbound caller ID number to send after the PIN:</string>
+    <string name="dialog_add_caller_message">Enter a name and the outbound number. The name appears as a button when you place a call.</string>
     <string name="label_no_caller_ids">None — caller enters manually on DISA</string>
-    <string name="toast_caller_id_empty">Please enter a number.</string>
-    <string name="toast_caller_id_duplicate">This number is already in the list.</string>
+    <string name="toast_caller_id_empty">Please enter a phone number.</string>
+    <string name="toast_caller_id_duplicate">That number is already in the list.</string>
     <string name="select_caller_id_title">Select Outbound Caller ID</string>
 
     <!-- Toasts -->
